@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LINE 채팅</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===========================
+       전역 설정 및 배경 (#9dbfb2)
+       =========================== */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #9dbfb2;
+      font-family: 'Noto Sans KR', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden; /* 배경에서 스크롤 방지 */
+    }
+
+    /* ===========================
+       휴대폰 그래픽 레이아웃
+       =========================== */
+    .phone-container {
+      width: 375px;        /* 아이폰 표준 너비 */
+      height: 812px;       /* 아이폰 표준 높이 */
+      background-color: #8ba8ca; /* LINE 기본 채팅방 배경색 */
+      border: 12px solid #1c1c1c; /* 휴대폰 베젤 */
+      border-radius: 40px; /* 아이폰 특유의 둥근 모서리 */
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* 아이폰 노치 (카메라 부분 장식) */
+    .notch {
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 140px; height: 25px;
+      background-color: #1c1c1c;
+      border-bottom-left-radius: 15px;
+      border-bottom-right-radius: 15px;
+      z-index: 10;
+    }
+
+    /* 상단 채팅방 이름 영역 */
+    .chat-header {
+      height: 85px;
+      background-color: transparent; /* LINE은 상단이 배경색과 이어집니다 */
+      display: flex;
+      align-items: flex-end;
+      padding: 0 20px 15px;
+      box-sizing: border-box;
+      color: #333;
+      font-weight: 700;
+      font-size: 1.1rem;
+      z-index: 5;
+    }
+
+    /* ===========================
+       채팅창 본문 영역 (스크롤 가능)
+       =========================== */
+    .chat-body {
+      flex: 1;
+      overflow-y: auto; /* 내용이 길어지면 자동 스크롤 */
+      padding: 10px 15px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    /* 스크롤바 디자인 숨기기 (깔끔한 모바일 화면 연출) */
+    .chat-body::-webkit-scrollbar { width: 5px; }
+    .chat-body::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
+
+    /* ===========================
+       말풍선 및 텍스트 서식
+       =========================== */
+    .msg-wrapper {
+      display: flex;
+      align-items: flex-end;
+      width: 100%;
+    }
+    .msg-wrapper.received { justify-content: flex-start; } /* 상대방 메시지 (왼쪽) */
+    .msg-wrapper.sent { justify-content: flex-end; }       /* 내 메시지 (오른쪽) */
+
+    .bubble {
+      max-width: 70%; /* 텍스트 길이에 맞춰 자동 조절되나 최대 너비 제한 */
+      padding: 8px 12px;
+      border-radius: 15px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      word-break: break-word; /* 긴 단어도 자연스럽게 줄바꿈 */
+      transition: filter 0.2s ease; /* 호버 시 자연스러운 전환 효과 */
+      cursor: default;
+    }
+    
+    /* 인터랙션: 마우스를 올렸을 때 살짝 어두워지는 효과 */
+    .bubble:hover {
+      filter: brightness(0.9);
+    }
+
+    /* 수신측 (상대방) 말풍선 스타일 */
+    .received .bubble {
+      background-color: #ffffff;
+      color: #333333;
+      border-top-left-radius: 3px; /* 꼬리표 같은 디테일 */
+    }
+
+    /* 송신측 (나) 말풍선 스타일 (LINE 특유의 초록색) */
+    .sent .bubble {
+      background-color: #8de055;
+      color: #111111;
+      border-top-right-radius: 3px; /* 꼬리표 같은 디테일 */
+    }
+
+    /* 시간 및 읽음 표시 */
+    .meta-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      margin: 0 6px;
+      font-size: 0.65rem;
+      color: #555555;
+      min-width: 25px;
+    }
+    .sent .meta-info { align-items: flex-end; }
+    .received .meta-info { align-items: flex-start; }
+    
+    .read-mark { margin-bottom: 2px; }
+
+    /* 날짜 구분선 */
+    .date-divider {
+      align-self: center;
+      background-color: rgba(0,0,0,0.15);
+      color: #ffffff;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      margin: 15px 0;
+    }
+
+    /* ===========================
+       하단 텍스트 입력창 (장식용)
+       =========================== */
+    .input-area {
+      height: 70px;
+      background-color: #f5f5f5;
+      display: flex;
+      align-items: center;
+      padding: 0 15px;
+      box-sizing: border-box;
+      gap: 10px;
+    }
+    .fake-input {
+      flex: 1;
+      height: 38px;
+      background-color: #ffffff;
+      border: 1px solid #dddddd;
+      border-radius: 20px;
+      padding: 0 15px;
+      display: flex;
+      align-items: center;
+      color: #aaaaaa;
+      font-size: 0.9rem;
+    }
+    .fake-send-btn {
+      width: 36px; height: 36px;
+      background-color: #007aff;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .fake-send-btn::before {
+      content: '➤';
+      color: #ffffff;
+      font-size: 14px;
+    }
+
+    /* 화면이 작을 때 휴대폰 크기 조정 (반응형) */
+    @media (max-height: 850px) {
+      .phone-container { transform: scale(0.9); }
+    }
+    @media (max-height: 750px) {
+      .phone-container { transform: scale(0.8); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="phone-container">
+    <div class="notch"></div>
+
+    <div class="chat-header">
+      <span>田辺 歩</span>
+    </div>
+
+    <div class="chat-body" id="chat-box">
+
+      <div class="date-divider">20XX年 00月 00日 何曜日</div>
+
+
+      <div class="msg-wrapper received">
+        <div class="bubble">
+          어이. 시간이 늦었다.
+        </div>
+        <div class="meta-info">
+          <span class="time">午後 11:00</span>
+        </div>
+      </div>
+
+      <div class="msg-wrapper received">
+        <div class="bubble">
+          계정 활동 멈춰라.
+        </div>
+        <div class="meta-info">
+          <span class="time">午後 11:01</span>
+        </div>
+      </div>
+
+
+      <div class="msg-wrapper sent">
+        <div class="meta-info">
+          <span class="read-mark">読む</span>
+          <span class="time">午後 11:05</span>
+        </div>
+        <div class="bubble">
+          하? 이 시간이니까 의미가 있지 !!
+        </div>
+      </div>
+
+      <div class="msg-wrapper sent">
+        <div class="meta-info">
+          <span class="read-mark">읽음</span>
+          <span class="time">午後 11:06</span>
+        </div>
+        <div class="bubble">
+          바보 아냐!<br>(¬‸¬ )
+        </div>
+      </div>
+
+      <div class="msg-wrapper received">
+        <div class="bubble">
+          말이 길군.
+        </div>
+        <div class="meta-info">
+          <span class="time">오전 11:10</span>
+        </div>
+      </div>
+      
+      <br><br><br><br><br><br><br><br>
+
+    </div>
+
+    <div class="input-area">
+      <div class="fake-input">메시지 입력...</div>
+      <div class="fake-send-btn"></div>
+    </div>
+  </div>
+
+  <script>
+    // 페이지 로딩 시 자동으로 채팅방 가장 아래로 스크롤을 내려주는 스크립트입니다.
+    window.onload = function() {
+      var chatBox = document.getElementById("chat-box");
+      chatBox.scrollTop = chatBox.scrollHeight;
+    };
+  </script>
+</body>
+</html>
