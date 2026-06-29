@@ -148,6 +148,17 @@
       margin: 15px 0;
     }
 
+    /* 연한 기울임꼴 텍스트 클래스 */
+    .fade-text {
+      font-style: italic; /* 기울임꼴 */
+      color: #777777 !important; /* 연한 회색 (!important로 기존 글자색 덮어쓰기) */
+    }
+
+/* 송신(초록색) 말풍선 전용 연한 글씨 (초록 배경에 어울리도록 투명도 사용) */
+    .sent .fade-text {
+      color: rgba(0, 0, 0, 0.45) !important; 
+    }
+
     /* ===========================
        하단 텍스트 입력창 (장식용)
        =========================== */
@@ -230,7 +241,7 @@
 
       <div class="msg-wrapper sent">
         <div class="meta-info">
-          <span class="read-mark">読む</span>
+          <span class="read-mark">既読</span>
           <span class="time">午後 11:05</span>
         </div>
         <div class="bubble">
@@ -240,7 +251,7 @@
 
       <div class="msg-wrapper sent">
         <div class="meta-info">
-          <span class="read-mark">읽음</span>
+          <span class="read-mark">既読</span>
           <span class="time">午後 11:06</span>
         </div>
         <div class="bubble">
@@ -253,7 +264,117 @@
           말이 길군.
         </div>
         <div class="meta-info">
-          <span class="time">오전 11:10</span>
+          <span class="time">午後 11:10</span>
+        </div>
+      </div>
+
+      <div class="msg-wrapper sent">
+        <div class="meta-info">
+          <span class="read-mark">既読</span>
+          <span class="time">午後 11:10</span>
+        </div>
+        <div class="bubble">
+          잠깐, 그것보다. 보고 있어??????
+        </div>
+      </div>
+
+      <div class="msg-wrapper sent">
+        <div class="meta-info">
+          <span class="read-mark">既読</span>
+          <span class="time">午後 11:10</span>
+        </div>
+        <div class="bubble">
+          아니, 아니지. 그전에, 먼저 메시지 보내지 말라고 했잖아!
+        </div>
+      </div>
+
+      <div class="msg-wrapper received">
+        <div class="bubble">
+          기껏 살펴 주고 있는데 말이야...
+        </div>
+        <div class="meta-info">
+          <span class="time">午後 11:15</span>
+        </div>
+      </div>
+
+      <div class="msg-wrapper sent">
+        <div class="meta-info">
+          <span class="read-mark">既読</span>
+          <span class="time">午後 11:15</span>
+        </div>
+        <div class="bubble">
+          부탁 안 했거든! 휴대폰 내려놔! 그리고...
+        </div>
+      </div>
+
+      <div class="msg-wrapper received">
+        <div class="bubble">
+          ?
+        </div>
+        <div class="meta-info">
+          <span class="time">午後 11:18</span>
+        </div>
+      </div>
+
+      <div class="msg-wrapper sent">
+        <div class="meta-info">
+          <span class="read-mark">既読</span>
+          <span class="time">午後 11:20</span>
+        </div>
+        <div class="bubble">
+          ......볼 거면 나중에 보라구.<br>오늘 찍은 거...
+        </div>
+      </div>
+
+      <div class="msg-wrapper received">
+        <div class="bubble">
+          제정신이 아니군. 자라.
+        </div>
+        <div class="meta-info">
+          <span class="time">午後 11:32</span>
+        </div>
+      </div>
+
+      <div class="date-divider">20XX年 00月 01日 何曜日</div>
+
+      <div class="msg-wrapper sent">
+        <div class="meta-info">
+          <span class="read-mark">既読</span>
+          <span class="time">午前 00:23</span>
+        </div>
+        <div class="bubble">
+          흥. 이래도 안 봐?
+        </div>
+      </div>
+
+
+      <div class="msg-wrapper sent">
+          <div class="bubble fade-text">
+        <div class="meta-info">
+          <span class="read-mark">既読</span>
+          <span class="time">午前 00:24</span>
+        </div>
+        <div class="bubble">
+          //삭제된 메시지입니다.//
+        </div>
+      </div>
+
+      <div class="msg-wrapper received">
+        <div class="bubble">
+          뭐냐.
+        </div>
+        <div class="meta-info">
+          <span class="time">午後 07:31</span>
+        </div>
+      </div>
+
+      <div class="msg-wrapper sent">
+        <div class="meta-info">
+          <span class="read-mark">既読</span>
+          <span class="time">午前 07:40</span>
+        </div>
+        <div class="bubble">
+          바보야!!!!!!!!!!
         </div>
       </div>
       
@@ -262,7 +383,7 @@
     </div>
 
     <div class="input-area">
-      <div class="fake-input">메시지 입력...</div>
+      <div class="fake-input">入力中...</div>
       <div class="fake-send-btn"></div>
     </div>
   </div>
