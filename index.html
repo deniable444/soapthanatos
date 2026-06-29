@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>타나부스 폰부스</title>
+  <title>LINE 채팅</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 
@@ -27,11 +27,11 @@
        휴대폰 그래픽 레이아웃
        =========================== */
     .phone-container {
-      width: 375px;        /* 아이폰 표준 너비 */
-      height: 812px;       /* 아이폰 표준 높이 */
-      background-color: #8ba8ca; /* LINE 기본 채팅방 배경색 */
-      border: 12px solid #1c1c1c; /* 휴대폰 베젤 */
-      border-radius: 40px; /* 아이폰 특유의 둥근 모서리 */
+      width: 375px;        
+      height: 812px;       
+      background-color: #8ba8ca; 
+      border: 12px solid #1c1c1c; 
+      border-radius: 40px; 
       box-shadow: 0 20px 40px rgba(0,0,0,0.15);
       position: relative;
       display: flex;
@@ -39,7 +39,7 @@
       overflow: hidden;
     }
 
-    /* 아이폰 노치 (카메라 부분 장식) */
+    /* 아이폰 노치 */
     .notch {
       position: absolute;
       top: 0; left: 50%;
@@ -48,21 +48,97 @@
       background-color: #1c1c1c;
       border-bottom-left-radius: 15px;
       border-bottom-right-radius: 15px;
-      z-index: 10;
+      z-index: 30;
     }
 
-    /* 상단 채팅방 이름 영역 */
+    /* 상단 채팅방 이름 & 메뉴 버튼 영역 */
     .chat-header {
       height: 85px;
       background-color: transparent; 
       display: flex;
+      justify-content: space-between; /* 양쪽 끝으로 배치 */
       align-items: flex-end;
       padding: 0 20px 15px;
       box-sizing: border-box;
       color: #333;
       font-weight: 700;
       font-size: 1.1rem;
-      z-index: 5;
+      z-index: 25;
+    }
+
+    /* 우측 상단 햄버거 메뉴 버튼 */
+    .menu-btn {
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #333;
+      transition: opacity 0.2s;
+    }
+    .menu-btn:hover { opacity: 0.7; }
+
+    /* ===========================
+       우측 슬라이드 메뉴 바
+       =========================== */
+    .slide-menu {
+      position: absolute;
+      top: 85px; /* 헤더 바로 아래부터 시작 */
+      right: -250px; /* 초기엔 화면 밖으로 숨김 */
+      width: 200px;
+      height: calc(100% - 85px);
+      background-color: #ffffff;
+      box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+      z-index: 20;
+      transition: right 0.3s ease-in-out; /* 슬라이드 애니메이션 */
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    /* 메뉴가 열렸을 때의 클래스 */
+    .slide-menu.open {
+      right: 0;
+    }
+
+    /* 슬라이드 메뉴 안의 날짜 태그 버튼들 */
+    .slide-menu h3 {
+      margin: 0 0 15px 0;
+      font-size: 0.95rem;
+      color: #555;
+      border-bottom: 2px solid #333;
+      padding-bottom: 5px;
+    }
+    .date-tag-btn {
+      background-color: #f0f0f0;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #333;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.2s;
+      font-family: inherit;
+    }
+    .date-tag-btn:hover {
+      background-color: #e0e0e0;
+    }
+
+    /* 메뉴가 열렸을 때 바탕을 어둡게 해주는 오버레이 */
+    .menu-overlay {
+      position: absolute;
+      top: 85px; left: 0;
+      width: 100%; height: calc(100% - 85px);
+      background-color: rgba(0,0,0,0.4);
+      z-index: 15;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+    }
+    .menu-overlay.open {
+      opacity: 1;
+      visibility: visible;
     }
 
     /* ===========================
@@ -70,14 +146,14 @@
        =========================== */
     .chat-body {
       flex: 1;
-      overflow-y: auto; /* 내용이 길어지면 자동 스크롤 */
+      overflow-y: auto; 
       padding: 10px 15px 20px;
       display: flex;
       flex-direction: column;
       gap: 15px;
+      scroll-behavior: smooth; /* 북마크 클릭 시 부드럽게 스크롤 */
     }
     
-    /* 스크롤바 디자인 숨기기 */
     .chat-body::-webkit-scrollbar { width: 5px; }
     .chat-body::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
 
@@ -103,9 +179,7 @@
       cursor: default;
     }
     
-    .bubble:hover {
-      filter: brightness(0.9);
-    }
+    .bubble:hover { filter: brightness(0.9); }
 
     .received .bubble {
       background-color: #ffffff;
@@ -119,7 +193,6 @@
       border-top-right-radius: 3px; 
     }
 
-    /* 시간 및 읽음 표시 */
     .meta-info {
       display: flex;
       flex-direction: column;
@@ -131,7 +204,6 @@
     }
     .sent .meta-info { align-items: flex-end; }
     .received .meta-info { align-items: flex-start; }
-    
     .read-mark { margin-bottom: 2px; }
 
     /* 날짜 구분선 */
@@ -145,18 +217,11 @@
       margin: 15px 0;
     }
 
-    /* 연한 기울임꼴 텍스트 클래스 */
-    .fade-text {
-      font-style: italic; 
-      color: #777777 !important; 
-    }
-
-    .sent .fade-text {
-      color: rgba(0, 0, 0, 0.45) !important; 
-    }
+    .fade-text { font-style: italic; color: #777777 !important; }
+    .sent .fade-text { color: rgba(0, 0, 0, 0.45) !important; }
 
     /* ===========================
-       하단 텍스트 입력창 (장식용)
+       하단 텍스트 입력창
        =========================== */
     .input-area {
       height: 70px;
@@ -166,6 +231,7 @@
       padding: 0 15px;
       box-sizing: border-box;
       gap: 10px;
+      z-index: 5;
     }
     .fake-input {
       flex: 1;
@@ -188,17 +254,11 @@
       align-items: center;
     }
     .fake-send-btn::before {
-      content: '➤';
-      color: #ffffff;
-      font-size: 14px;
+      content: '➤'; color: #ffffff; font-size: 14px;
     }
 
-    @media (max-height: 850px) {
-      .phone-container { transform: scale(0.9); }
-    }
-    @media (max-height: 750px) {
-      .phone-container { transform: scale(0.8); }
-    }
+    @media (max-height: 850px) { .phone-container { transform: scale(0.9); } }
+    @media (max-height: 750px) { .phone-container { transform: scale(0.8); } }
   </style>
 </head>
 <body>
@@ -208,403 +268,194 @@
 
     <div class="chat-header">
       <span>田辺 歩</span>
+      <div class="menu-btn" onclick="toggleMenu()">☰</div>
+    </div>
+
+    <div class="menu-overlay" id="overlay" onclick="toggleMenu()"></div>
+
+    <div class="slide-menu" id="side-menu">
+      <h3>북마크</h3>
+      <button class="date-tag-btn" onclick="scrollToDate('day-00')">00日</button>
+      <button class="date-tag-btn" onclick="scrollToDate('day-01')">01日</button>
+      <button class="date-tag-btn" onclick="scrollToDate('day-02')">02日</button>
+      <button class="date-tag-btn" onclick="scrollToDate('day-03')">03日</button>
     </div>
 
     <div class="chat-body" id="chat-box">
 
-      <div class="date-divider">20XX年 00月 00日 何曜日</div>
+      <div class="date-divider" id="day-00">20XX年 00月 00日 何曜日</div>
 
       <div class="msg-wrapper received">
-        <div class="bubble">
-          어이. 시간이 늦었다.
-        </div>
-        <div class="meta-info">
-          <span class="time">午後 11:00</span>
-        </div>
+        <div class="bubble">어이. 시간이 늦었다.</div>
+        <div class="meta-info"><span class="time">午後 11:00</span></div>
       </div>
+      <div class="msg-wrapper received">
+        <div class="bubble">계정 활동 멈춰라.</div>
+        <div class="meta-info"><span class="time">午後 11:01</span></div>
+      </div>
+      <div class="msg-wrapper sent">
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午後 11:05</span></div>
+        <div class="bubble">하? 이 시간이니까 의미가 있지 !!</div>
+      </div>
+      <div class="msg-wrapper sent">
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午後 11:06</span></div>
+        <div class="bubble">바보 아냐!<br>(¬‸¬ )</div>
+      </div>
+      <div class="msg-wrapper received">
+        <div class="bubble">말이 길군.</div>
+        <div class="meta-info"><span class="time">午後 11:10</span></div>
+      </div>
+      <div class="msg-wrapper sent">
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午後 11:10</span></div>
+        <div class="bubble">잠깐, 그것보다. 보고 있어??????</div>
+      </div>
+      <div class="msg-wrapper sent">
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午後 11:10</span></div>
+        <div class="bubble">아니, 아니지. 그전에, 먼저 메시지 보내지 말라고 했잖아!</div>
+      </div>
+      <div class="msg-wrapper received">
+        <div class="bubble">기껏 살펴 주고 있는데 말이야...</div>
+        <div class="meta-info"><span class="time">午後 11:15</span></div>
+      </div>
+      <div class="msg-wrapper sent">
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午後 11:15</span></div>
+        <div class="bubble">부탁 안 했거든! 휴대폰 내려놔! 그리고...</div>
+      </div>
+      <div class="msg-wrapper received">
+        <div class="bubble">?</div>
+        <div class="meta-info"><span class="time">午後 11:18</span></div>
+      </div>
+      <div class="msg-wrapper sent">
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午後 11:20</span></div>
+        <div class="bubble">......볼 거면 나중에 보라구.<br>오늘 찍은 거...</div>
+      </div>
+      <div class="msg-wrapper received">
+        <div class="bubble">제정신이 아니군. 자라.</div>
+        <div class="meta-info"><span class="time">午後 11:32</span></div>
+      </div>
+
+      <div class="date-divider" id="day-01">20XX年 00月 01日 何曜日</div>
+
+      <div class="msg-wrapper sent">
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午前 00:23</span></div>
+        <div class="bubble">흥. 이래도 안 봐?</div>
+      </div>
+      <div class="msg-wrapper sent">
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午前 00:24</span></div>
+        <div class="bubble fade-text">//삭제된 메시지입니다.//</div>
+      </div>
+      <div class="msg-wrapper received">
+        <div class="bubble">뭐냐.</div>
+        <div class="meta-info"><span class="time">午後 07:31</span></div>
+      </div>
+      <div class="msg-wrapper sent">
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午前 07:40</span></div>
+        <div class="bubble">바보야!!!!!!!!!!</div>
+      </div>
+
+      <div class="date-divider" id="day-02">20XX年 00月 02日 何曜日</div>
+
+      <div class="msg-wrapper sent">
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午後 11:40</span></div>
+        <div class="bubble">있잖아</div>
+      </div>
+      <div class="msg-wrapper sent">
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午後 11:43</span></div>
+        <div class="bubble">이제 학교로는 안 오지? 사건도 정리됐고</div>
+      </div>
+      <div class="msg-wrapper sent">
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午後 11:44</span></div>
+        <div class="bubble">뭐 다행이긴 한데...꒰ 𓏼 𛱅 𛱊 𛱄 𓏼 ꒱</div>
+      </div>
+      <div class="msg-wrapper sent">
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午後 11:50</span></div>
+        <div class="bubble">많이 바빠?</div>
+      </div>
+      <div class="msg-wrapper received">
+        <div class="bubble">그래.</div>
+        <div class="meta-info"><span class="time">午後 11:59</span></div>
+      </div>
+
+      <div class="date-divider" id="day-03">2026年 00月 03日 何曜日</div>
 
       <div class="msg-wrapper received">
-        <div class="bubble">
-          계정 활동 멈춰라.
-        </div>
-        <div class="meta-info">
-          <span class="time">午後 11:01</span>
-        </div>
+        <div class="bubble">자꾸 새벽에 문자 보내는 건 그만두지?</div>
+        <div class="meta-info"><span class="time">午前 00:01</span></div>
       </div>
-
       <div class="msg-wrapper sent">
-        <div class="meta-info">
-          <span class="read-mark">既読</span>
-          <span class="time">午後 11:05</span>
-        </div>
-        <div class="bubble">
-          하? 이 시간이니까 의미가 있지 !!
-        </div>
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午前 00:01</span></div>
+        <div class="bubble">그치만 학교에선 이렇게 폰 오래 못 보고 있고</div>
       </div>
-
       <div class="msg-wrapper sent">
-        <div class="meta-info">
-          <span class="read-mark">既読</span>
-          <span class="time">午後 11:06</span>
-        </div>
-        <div class="bubble">
-          바보 아냐!<br>(¬‸¬ )
-        </div>
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午前 00:01</span></div>
+        <div class="bubble">지금이어야만 너한테 말 걸 만하고</div>
       </div>
-
+      <div class="msg-wrapper sent">
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午前 00:02</span></div>
+        <div class="bubble">근데 넌 바른 생활 한 적도 없으면서 일찍 자는 척이나 하고</div>
+      </div>
+      <div class="msg-wrapper sent">
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午前 00:01</span></div>
+        <div class="bubble">게다가 내일 주말인데, 어쩔 수 없잖아...</div>
+      </div>
       <div class="msg-wrapper received">
-        <div class="bubble">
-          말이 길군.
-        </div>
-        <div class="meta-info">
-          <span class="time">午後 11:10</span>
-        </div>
+        <div class="bubble">허.</div>
+        <div class="meta-info"><span class="time">午前 00:03</span></div>
       </div>
-
-      <div class="msg-wrapper sent">
-        <div class="meta-info">
-          <span class="read-mark">既読</span>
-          <span class="time">午後 11:10</span>
-        </div>
-        <div class="bubble">
-          잠깐, 그것보다. 보고 있어??????
-        </div>
-      </div>
-
-      <div class="msg-wrapper sent">
-        <div class="meta-info">
-          <span class="read-mark">既読</span>
-          <span class="time">午後 11:10</span>
-        </div>
-        <div class="bubble">
-          아니, 아니지. 그전에, 먼저 메시지 보내지 말라고 했잖아!
-        </div>
-      </div>
-
       <div class="msg-wrapper received">
-        <div class="bubble">
-          기껏 살펴 주고 있는데 말이야...
-        </div>
-        <div class="meta-info">
-          <span class="time">午後 11:15</span>
-        </div>
+        <div class="bubble">슬슬 기어오르는 걸 보니<br>또 맞을 때가 됐나.</div>
+        <div class="meta-info"><span class="time">午前 00:04</span></div>
       </div>
-
       <div class="msg-wrapper sent">
-        <div class="meta-info">
-          <span class="read-mark">既読</span>
-          <span class="time">午後 11:15</span>
-        </div>
-        <div class="bubble">
-          부탁 안 했거든! 휴대폰 내려놔! 그리고...
-        </div>
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午前 00:05</span></div>
+        <div class="bubble">안 죽인다며! 때리지도 말고!</div>
       </div>
-
+      <div class="msg-wrapper sent">
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午前 00:05</span></div>
+        <div class="bubble">평범하게 만나서 얘기하면 되잖아?!</div>
+      </div>
       <div class="msg-wrapper received">
-        <div class="bubble">
-          ?
-        </div>
-        <div class="meta-info">
-          <span class="time">午後 11:18</span>
-        </div>
+        <div class="bubble">평범이라.</div>
+        <div class="meta-info"><span class="time">午前 00:07</span></div>
       </div>
-
-      <div class="msg-wrapper sent">
-        <div class="meta-info">
-          <span class="read-mark">既読</span>
-          <span class="time">午後 11:20</span>
-        </div>
-        <div class="bubble">
-          ......볼 거면 나중에 보라구.<br>오늘 찍은 거...
-        </div>
-      </div>
-
       <div class="msg-wrapper received">
-        <div class="bubble">
-          제정신이 아니군. 자라.
-        </div>
-        <div class="meta-info">
-          <span class="time">午後 11:32</span>
-        </div>
+        <div class="bubble">바라는 것도 많지...</div>
+        <div class="meta-info"><span class="time">午前 00:08</span></div>
       </div>
-
-      <div class="date-divider">20XX年 00月 01日 何曜日</div>
-
       <div class="msg-wrapper sent">
-        <div class="meta-info">
-          <span class="read-mark">既読</span>
-          <span class="time">午前 00:23</span>
-        </div>
-        <div class="bubble">
-          흥. 이래도 안 봐?
-        </div>
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午前 00:10</span></div>
+        <div class="bubble">너</div>
       </div>
-
       <div class="msg-wrapper sent">
-        <div class="meta-info">
-          <span class="read-mark">既読</span>
-          <span class="time">午前 00:24</span>
-        </div>
-        <div class="bubble fade-text">
-          //삭제된 메시지입니다.//
-        </div>
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午前 00:10</span></div>
+        <div class="bubble">나 어디 사는지 알잖아</div>
       </div>
-
+      <div class="msg-wrapper sent">
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午前 00:11</span></div>
+        <div class="bubble">나는 모르니까, 네가 와야 하는 거야</div>
+      </div>
       <div class="msg-wrapper received">
-        <div class="bubble">
-          뭐냐.
-        </div>
-        <div class="meta-info">
-          <span class="time">午後 07:31</span>
-        </div>
+        <div class="bubble">...</div>
+        <div class="meta-info"><span class="time">午前 00:12</span></div>
       </div>
-
+      <div class="msg-wrapper received">
+        <div class="bubble">어이, 킨교</div>
+        <div class="meta-info"><span class="time">午前 07:30</span></div>
+      </div>
+      <div class="msg-wrapper received">
+        <div class="bubble">문 열어라.</div>
+        <div class="meta-info"><span class="time">午前 07:30</span></div>
+      </div>
       <div class="msg-wrapper sent">
-        <div class="meta-info">
-          <span class="read-mark">既読</span>
-          <span class="time">午前 07:40</span>
-        </div>
-        <div class="bubble">
-          바보야!!!!!!!!!!
-        </div>
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午前 07:31</span></div>
+        <div class="bubble">???????????잠ㄲ</div>
       </div>
-
-      <div class="date-divider">20XX年 00月 02日 何曜日</div>
-
       <div class="msg-wrapper sent">
-        <div class="meta-info">
-          <span class="read-mark">既読</span>
-          <span class="time">午後 11:40</span>
-        </div>
-        <div class="bubble">
-          있잖아
-        </div>
+        <div class="meta-info"><span class="read-mark">既読</span><span class="time">午前 07:32</span></div>
+        <div class="bubble">잠깐ㄴㅁ만!!!!!!!!!!!!!!!!!!!!</div>
       </div>
-
-     <div class="msg-wrapper sent">
-       <div class="meta-info">
-         <span class="read-mark">既読</span>
-         <span class="time">午後 11:43</span>
-       </div>
-       <div class="bubble">
-         이제 학교로는 안 오지? 사건도 정리됐고
-       </div>
-     </div>
-
-     <div class="msg-wrapper sent">
-       <div class="meta-info">
-         <span class="read-mark">既読</span>
-         <span class="time">午後 11:44</span>
-       </div>
-       <div class="bubble">
-         뭐 다행이긴 한데...꒰ 𓏼 𛱅 𛱊 𛱄 𓏼 ꒱
-       </div>
-     </div>
-
-     <div class="msg-wrapper sent">
-       <div class="meta-info">
-         <span class="read-mark">既読</span>
-         <span class="time">午後 11:50</span>
-       </div>
-       <div class="bubble">
-         많이 바빠?
-       </div>
-     </div>
-
-     <div class="msg-wrapper received">
-       <div class="bubble">
-         그래.
-       </div>
-       <div class="meta-info">
-         <span class="time">午後 11:59</span>
-       </div>
-     </div>
-
-     <div class="date-divider">2026年 00月 03日 何曜日</div>
-
-     <div class="msg-wrapper received">
-       <div class="bubble">
-         자꾸 새벽에 문자 보내는 건 그만두지?
-       </div>
-       <div class="meta-info">
-         <span class="time">午前 00:01</span>
-       </div>
-     </div>
-
-     <div class="msg-wrapper sent">
-       <div class="meta-info">
-         <span class="read-mark">既読</span>
-         <span class="time">午前 00:01</span>
-       </div>
-       <div class="bubble">
-         그치만 학교에선 이렇게 폰 오래 못 보고 있고
-       </div>
-     </div>
-
-     <div class="msg-wrapper sent">
-       <div class="meta-info">
-         <span class="read-mark">既読</span>
-         <span class="time">午前 00:01</span>
-       </div>
-       <div class="bubble">
-         지금이어야만 너한테 말 걸 만하고
-       </div>
-     </div>
-
-     <div class="msg-wrapper sent">
-       <div class="meta-info">
-         <span class="read-mark">既読</span>
-         <span class="time">午前 00:02</span>
-       </div>
-       <div class="bubble">
-         근데 넌 바른 생활 한 적도 없으면서 일찍 자는 척이나 하고
-       </div>
-     </div>
-
-     <div class="msg-wrapper sent">
-       <div class="meta-info">
-         <span class="read-mark">既読</span>
-         <span class="time">午前 00:01</span>
-       </div>
-       <div class="bubble">
-         게다가 내일 주말인데, 어쩔 수 없잖아...
-       </div>
-     </div>
-
-     <div class="msg-wrapper received">
-       <div class="bubble">
-         허.
-       </div>
-       <div class="meta-info">
-         <span class="time">午前 00:03</span>
-       </div>
-     </div>
-
-     <div class="msg-wrapper received">
-       <div class="bubble">
-         슬슬 기어오르는 걸 보니<br>또 맞을 때가 됐나.
-       </div>
-       <div class="meta-info">
-         <span class="time">午前 00:04</span>
-       </div>
-     </div>
-
-     <div class="msg-wrapper sent">
-       <div class="meta-info">
-         <span class="read-mark">既読</span>
-         <span class="time">午前 00:05</span>
-       </div>
-       <div class="bubble">
-         안 죽인다며! 때리지도 말고!
-       </div>
-     </div>
-
-     <div class="msg-wrapper sent">
-       <div class="meta-info">
-         <span class="read-mark">既読</span>
-         <span class="time">午前 00:05</span>
-       </div>
-       <div class="bubble">
-         평범하게 만나서 얘기하면 되잖아?!
-       </div>
-     </div>
-
-     <div class="msg-wrapper received">
-       <div class="bubble">
-         평범이라.
-       </div>
-       <div class="meta-info">
-        <span class="time">午前 00:07</span>
-       </div>
-     </div>
-
-     <div class="msg-wrapper received">
-       <div class="bubble">
-         바라는 것도 많지...
-       </div>
-       <div class="meta-info">
-         <span class="time">午前 00:08</span>
-       </div>
-     </div>
-
-     <div class="msg-wrapper sent">
-       <div class="meta-info">
-         <span class="read-mark">既読</span>
-         <span class="time">午前 00:10</span>
-       </div>
-       <div class="bubble">
-         너
-       </div>
-     </div>
-
-     <div class="msg-wrapper sent">
-       <div class="meta-info">
-        <span class="read-mark">既読</span>
-         <span class="time">午前 00:10</span>
-       </div>
-       <div class="bubble">
-         나 어디 사는지 알잖아
-       </div>
-     </div>
-
-     <div class="msg-wrapper sent">
-       <div class="meta-info">
-         <span class="read-mark">既読</span>
-         <span class="time">午前 00:11</span>
-       </div>
-       <div class="bubble">
-         나는 모르니까, 네가 와야 하는 거야
-       </div>
-     </div>
-
-     <div class="msg-wrapper received">
-       <div class="bubble">
-         ...
-       </div>
-       <div class="meta-info">
-         <span class="time">午前 00:12</span>
-       </div>
-     </div>
-
-     <div class="msg-wrapper received">
-       <div class="bubble">
-         어이, 킨교
-       </div>
-       <div class="meta-info">
-         <span class="time">午前 07:30</span>
-       </div>
-     </div>
-
-     <div class="msg-wrapper received">
-       <div class="bubble">
-         문 열어라.
-       </div>
-       <div class="meta-info">
-         <span class="time">午前 07:30</span>
-       </div>
-     </div>
-
-     <div class="msg-wrapper sent">
-       <div class="meta-info">
-         <span class="read-mark">既読</span>
-         <span class="time">午前 07:31</span>
-       </div>
-       <div class="bubble">
-         ???????????잠ㄲ
-       </div>
-     </div>
-
-     <div class="msg-wrapper sent">
-       <div class="meta-info">
-         <span class="read-mark">既読</span>
-         <span class="time">午前 07:32</span>
-       </div>
-       <div class="bubble">
-         잠깐ㄴㅁ만!!!!!!!!!!!!!!!!!!!!
-       </div>
-     </div>
       
-      <br><br><br><br><br><br><br><br>
+      <br><br><br>
 
     </div>
 
@@ -615,9 +466,34 @@
   </div>
 
   <script>
-    // 페이지 로딩 시 자동으로 채팅방 가장 아래로 스크롤을 내려주는 스크립트
+    // 메뉴 열고 닫기 함수
+    function toggleMenu() {
+      const menu = document.getElementById('side-menu');
+      const overlay = document.getElementById('overlay');
+      menu.classList.toggle('open');
+      overlay.classList.toggle('open');
+    }
+
+    // 날짜로 스크롤하는 북마크 함수
+    function scrollToDate(id) {
+      const targetElement = document.getElementById(id);
+      const chatBox = document.getElementById('chat-box');
+      
+      if (targetElement) {
+        // 채팅방 컨테이너(chatBox) 안에서 해당 날짜 태그의 위치를 계산하여 이동
+        chatBox.scrollTo({
+          top: targetElement.offsetTop - 20, // 살짝 여유 공간(20px)을 두고 이동
+          behavior: 'smooth'
+        });
+        
+        // 이동 후 메뉴를 자동으로 닫아줌
+        toggleMenu();
+      }
+    }
+
+    // 페이지 로딩 시 자동으로 채팅방 가장 아래로
     window.onload = function() {
-      var chatBox = document.getElementById("chat-box");
+      const chatBox = document.getElementById("chat-box");
       chatBox.scrollTop = chatBox.scrollHeight;
     };
   </script>
